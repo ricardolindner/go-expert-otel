@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  go-weather-input:
+    build:
+      context: ./go-weather-input
+      dockerfile: Dockerfile
+    container_name: go-weather-input
+    environment:
+      - SERVICE_B_URL=http://go-weather-api:8080/weather
+      - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
+    ports:
+      - "8080:8080"
+    depends_on:
+      - otel-collector
+  
+  go-weather-api:
+    build:
+      context: ./go-weather-api
+      dockerfile: Dockerfile
+    container_name: go-weather-api
+    env_file:
+      - ./.env
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
+    depends_on:
+      - otel-collector
+  
+  otel-collector:
+    image: otel/opentelemetry-collector:0.100.0
+    container_name: otel-collector
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-zipkin/otel-collector.yml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317" # Porta OTLP/gRPC
+      - "4318:4318" # Porta OTLP/HTTP
+    depends_on:
+      - zipkin
+
+  zipkin:
+    image: openzipkin/zipkin:2
+    container_name: zipkin
+    ports:
+      - "9411:9411"
