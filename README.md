@@ -123,7 +123,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"cep": "04552000"}' http:/
 
 Expected output:
 ```json
-{"temp_C":16.1,"temp_F":60.980000000000004,"temp_K":289.1}
+{"city":"São Paulo","temp_C":20.1,"temp_F":68.18,"temp_K":293.1}
 ```
 
 #### Validation Error (Invalid CEP Format)

@@ -64,7 +64,7 @@ func TestGetWeather(t *testing.T) {
 		wantStatus int
 		wantBody   string
 	}{
-		{"valid CEP", "89053300", http.StatusOK, `{"temp_C":17.1,"temp_F":62.78,"temp_K":290.1}`},
+		{"valid CEP", "89053300", http.StatusOK, `{"city":"Blumenau", "temp_C":17.1,"temp_F":62.78,"temp_K":290.1}`},
 		{"invalid format CEP", "1234567", http.StatusUnprocessableEntity, `{"error":"invalid zipcode"}`},
 		{"non-existent CEP", "00000000", http.StatusNotFound, `{"error":"can not find zipcode"}`},
 		{"no weather for location", "89053301", http.StatusNotFound, `{"error":"can not find weather for this location"}`},
